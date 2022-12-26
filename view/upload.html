@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?php echo TITLE; ?></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="<?php echo WEB; ?>css/layout.css"/>
+		<script type="text/javascript" src="<?php echo WEB; ?>js/jquery.js"></script>
+		<script type="text/javascript" src="<?php echo WEB; ?>js/layout.js"></script>
+		<script type="text/javascript">
+		var WEB = "<?php echo WEB; ?>";
+		var UPLOAD_ID = "<?php echo uniqid(); ?>";
+		
+		var MAX_FILE_SIZE = <?php echo MAX_FILE_SIZE; ?>;
+		var MAX_ALBUM_SIZE = <?php echo MAX_ALBUM_SIZE; ?>;
+		
+		var info = "<?php echo sprintf($lang['upload_notification'], size(MAX_FILE_SIZE)); ?>";
+		
+		var error =
+		[
+			"<?php echo $lang['upload_error_url']; ?>",
+			"<?php echo $lang['upload_error_type']; ?>",
+			"<?php echo sprintf($lang['upload_error_size'], size(MAX_FILE_SIZE)); ?>",
+			"<?php echo sprintf($lang['upload_error_amount'], MAX_ALBUM_SIZE); ?>"
+		];
+		</script>
+		<script type="text/javascript" src="<?php echo WEB; ?>js/upload.js"></script>
+		<link rel="shortcut icon" href="<?php echo WEB; ?>image/favicon.png"/>
+	</head>
+	<body>
+		<div id="page">
+			<div id="header">
+				<a href="<?php echo WEB; ?>"><img src="<?php echo WEB; ?>image/logo.png" alt="Logo"/></a>
+				<p id="navigation">
+					<a href="<?php echo WEB; ?>" class="current"><?php echo $lang['upload']; ?></a>
+					<a href="<?php echo WEB; ?>gallery/"><?php echo $lang['gallery']; ?></a>
+				</p>
+			</div>
+			<hr/>
+			<div id="content" class="upload">
+				<div id="center">
+					<div id="upload">
+						<p class="title"><?php echo $lang['share_images']; ?></p>
+						<div id="buttons">
+							<a id="upload_computer" class="button enabled"><?php echo $lang['upload_computer']; ?></a>
+							<a id="upload_web" class="button enabled"><?php echo $lang['upload_web']; ?></a>
+							<a id="upload_initiate" class="button"><?php echo $lang['upload_initiate']; ?> (<span id="album_size">0</span>/<?php echo MAX_ALBUM_SIZE; ?>)</a>
+							<a id="upload_cancel" class="button enabled"><?php echo $lang['upload_cancel']; ?></a>
+							<div class="clear"></div>
+						</div>
+						<div id="upload_list">
+							<p id="upload_list_empty"><?php echo $lang['upload_list_empty']; ?></p>
+						</div>
+						<p id="upload_info" class="notification">
+							<?php echo sprintf($lang['upload_notification'], size(MAX_FILE_SIZE)); ?>
+						</p>
+					</div>
+					<div id="recent">
+						<p class="title"><?php echo $lang['recently_added']; ?></p>
+						<div id="gallery">
+							<?php $i = 0; while($album = mysql_fetch_row($recent)): ?>
+							<?php if(++$i%4 == 1): ?><div><?php endif; ?>
+							<?php $image = mysql_fetch_row(mysql_query('SELECT `id`, `extension` FROM `image` WHERE `album_id`='.$album[0].' ORDER BY `id` DESC LIMIT 0,1')); ?>
+							<a href="<?php echo WEB; ?>a/<?php echo alphaID($album[0]); ?>">
+								<img src="<?php echo WEB; ?>small/<?php echo alphaID($image[0]); ?>.<?php echo $image[1]; ?>" alt=""/>
+							</a>
+							<?php if($i%4 == 0): ?></div><?php endif; ?>
+							<?php endwhile; ?>
+							<?php if($i%4 != 0): ?></div><?php endif; ?>
+						</div>
+						<p>
+							<a href="gallery/" class="button enabled"><?php echo $lang['browse_gallery']; ?></a>
+							<span class="right"><?php echo $total_amounts; ?></span>
+						</p>
+					</div>
+					<div class="clear"><!-- --></div>
+				</div>
+			</div>
+			<hr/>
+			<div id="footer">
+				<?php require 'view/footer.html'; ?>
+				<div class="clear"><!-- --></div>
+			</div>
+		</div>
+	</body>
+</html>

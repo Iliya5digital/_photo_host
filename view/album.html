@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?php echo TITLE; ?></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<?php if(isset($album)): ?>
+		<script type="text/javascript" src="<?php echo WEB; ?>js/jquery.js"></script>
+		<script type="text/javascript">
+		var SLIDE = <?php echo $slide; ?>;
+		var MAX_SLIDE = <?php echo $max_slide; ?>;
+		</script>
+		<script type="text/javascript" src="<?php echo WEB; ?>js/album.js"></script>
+		<?php endif; ?>
+		<link rel="shortcut icon" href="<?php echo WEB; ?>image/favicon.png"/>
+		<link rel="stylesheet" href="<?php echo WEB; ?>css/layout.css"/>
+	</head>
+	<body>
+		<div id="page">
+			<div id="header">
+				<a href="<?php echo WEB; ?>"><img src="<?php echo WEB; ?>image/logo.png" alt="Logo"/></a>
+				<p id="navigation">
+					<a href="<?php echo WEB; ?>"><?php echo $lang['upload']; ?></a>
+					<?php if(isset($_SESSION['order']) && isset($_SESSION['range']) && isset($_SESSION['page'])): ?>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $_SESSION['order']; ?>/<?php echo $_SESSION['range']; ?>/<?php echo $_SESSION['page']; ?>/"><?php echo $lang['back_to_gallery']; ?></a>
+					<?php else: ?>
+					<a href="<?php echo WEB; ?>gallery/"><?php echo $lang['back_to_gallery']; ?></a>
+					<?php endif; ?>
+				</p>
+			</div>
+			<hr/>
+			<div id="content" class="album">
+				<div class="clear"><!-- --></div>
+				<div id="album">
+					<?php if(isset($album)): ?>
+					<div id="thumbnails">
+						<a id="slide_left" <?php if($slide == 0): ?>class="disabled"<?php else: ?>href="?slide=<?php echo $slide - 1; ?>"<?php endif; ?>><span>&laquo;</span></a>
+						<div id="visible">
+							<div id="slide" style="left: -<?php echo $slide*600; ?>px;">
+								<?php while($thumbnail = mysql_fetch_assoc($album)): ?>
+								<a <?php if($thumbnail['id'] == $image['id']): ?>class="current" <?php endif; ?>href="<?php echo WEB.alphaID($thumbnail['id']); ?>"><img src="<?php echo WEB; ?>small/<?php echo alphaID($thumbnail['id']); ?>.<?php echo $thumbnail['extension']; ?>" alt="Thumbnail"/></a>
+								<?php endwhile; ?>
+							</div>
+						</div>
+						<a id="slide_right" <?php if($slide == $max_slide): ?>class="disabled"<?php else: ?>href="?slide=<?php echo $slide + 1; ?>"<?php endif; ?>><span>&raquo;</span></a>
+					</div>
+					<?php endif; ?>
+					<a id="image" href="<?php echo WEB.$alpha.'.'.$image['extension']; ?>">
+						<img src="<?php echo WEB; ?>medium/<?php echo $alpha; ?>.<?php echo $image['extension']; ?>" alt="Medium-sized image"/>
+					</a>
+				</div>
+				<div id="information">
+					<p id="date" class="title"><?php echo sprintf($lang['image_submitted'], time_ago(strtotime($album_date))); ?></p>
+					<p id="info"><?php echo sprintf($lang['image_statistics'], number_format($image['views'], 0, '.', $lang['thousand_separator']), size($image['views']*$image['size'])); ?></p>
+					<!-- AddThis Button BEGIN -->
+					<div class="addthis_toolbox addthis_default_style ">
+					<a class="addthis_button_preferred_1"></a>
+					<a class="addthis_button_preferred_2"></a>
+					<a class="addthis_button_preferred_3"></a>
+					<a class="addthis_button_compact"></a>
+					<a class="addthis_counter addthis_bubble_style"></a>
+					</div>
+					<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4f2ff4ce07f0b85e"></script>
+					<!-- AddThis Button END -->
+					<?php if(isset($album)): ?>
+					<p class="link">
+						<?php echo $lang['album']; ?>
+						<input type="text" value="<?php echo HTTP; ?>a/<?php echo alphaID($album_id); ?>" readonly="readonly"/>
+					</p>
+					<?php endif; ?>
+					<p class="link">
+						<?php echo $lang['image']; ?>
+						<input type="text" value="<?php echo HTTP.$alpha; ?>" readonly="readonly"/>
+					</p>
+					<?php if(file_exists('view/adsense.html')): ?>
+					<div id="adsense">
+						<?php
+						require 'view/adsense.html';
+						?>
+					</div>
+					<?php endif; ?>
+				</div>
+				<div class="clear"><!-- --></div>
+			</div>
+			<hr/>
+			<div id="footer">
+				<?php require 'view/footer.html'; ?>
+				<div class="clear"><!-- --></div>
+			</div>
+		</div>
+	</body>
+</html>

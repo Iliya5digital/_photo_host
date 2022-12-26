@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?php echo TITLE; ?></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="<?php echo WEB; ?>css/layout.css"/>
+		<link rel="shortcut icon" href="<?php echo WEB; ?>image/favicon.png"/>
+	</head>
+	<body>
+		<div id="page">
+			<div id="header">
+				<a href="<?php echo WEB; ?>"><img src="<?php echo WEB; ?>image/logo.png" alt="Logo"/></a>
+				<p id="navigation">
+					<a href="<?php echo WEB; ?>"><?php echo $lang['upload']; ?></a>
+					<a href="<?php echo WEB; ?>gallery/" class="current"><?php echo $lang['gallery']; ?></a>
+				</p>
+			</div>
+			<hr/>
+			<div id="content" class="gallery">
+				<div id="selection">
+					<a href="<?php echo WEB; ?>gallery/new/<?php echo $range; ?>/1/" class="button enabled left<?php if($order == 'new'): ?> current<?php endif; ?>"><?php echo $lang['new']; ?></a>
+					<a href="<?php echo WEB; ?>gallery/popular/<?php echo $range; ?>/1/" class="button enabled left<?php if($order == 'popular'): ?> current<?php endif; ?>"><?php echo $lang['popular']; ?></a>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/all/1/" class="button enabled right<?php if($range == 'all'): ?> current<?php endif; ?>"><?php echo $lang['all_time']; ?></a>
+					<?php if($month[0]): ?>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/month/1/" class="button enabled right<?php if($range == 'month'): ?> current<?php endif; ?>"><?php echo $lang['month']; ?></a>
+					<?php if($week[0]): ?>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/week/1/" class="button enabled right<?php if($range == 'week'): ?> current<?php endif; ?>"><?php echo $lang['week']; ?></a>
+					<?php endif; ?>
+					<?php if($today[0]): ?>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/today/1/" class="button enabled right<?php if($range == 'today'): ?> current<?php endif; ?>"><?php echo $lang['today']; ?></a>
+					<?php endif; ?>
+					<?php endif; ?>
+					<div class="clear"><!-- --></div>
+				</div>
+				<?php $i = 0; while($image = mysql_fetch_row($images)): $alpha = alphaID($image[0]); ?>
+				<div class="image<?php if(++$i%5 == 0): ?> right<?php endif; ?>">
+					<a href="<?php echo WEB.$alpha; ?>/">
+						<img src="<?php echo WEB; ?>square/<?php echo alphaID($image[0]); ?>.<?php echo $image[1]; ?>" alt="Image"/>
+					</a>
+				</div>
+				<?php endwhile; ?>
+				<div class="clear"><!-- --></div>
+				<div id="pagination">
+					<?php if($page != 1): ?>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/<?php echo $range; ?>/<?php echo $page - 1; ?>/" class="button enabled left"><?php echo $lang['previous']; ?></a>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/<?php echo $range; ?>/1/" class="button enabled left"><?php echo $lang['first']; ?></a>
+					<?php else: ?>
+					<a class="button left"><?php echo $lang['previous']; ?></a>
+					<a class="button left"><?php echo $lang['first']; ?></a>
+					<?php endif; ?>
+					<?php for($i=$min; $i<=$max; $i++): ?>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/<?php echo $range; ?>/<?php echo $i; ?>/" class="button enabled<?php if($i == $page): ?> current<?php endif; ?>"><?php echo $i; ?></a>
+					<?php endfor; ?>
+					<?php if($page != $pages): ?>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/<?php echo $range; ?>/<?php echo $page + 1; ?>/" class="button enabled right"><?php echo $lang['next']; ?></a>
+					<a href="<?php echo WEB; ?>gallery/<?php echo $order; ?>/<?php echo $range; ?>/<?php echo $pages; ?>/" class="button enabled right"><?php echo $lang['last']; ?></a>
+					<?php else: ?>
+					<a class="button right"><?php echo $lang['next']; ?></a>
+					<a class="button right"><?php echo $lang['last']; ?></a>
+					<?php endif; ?>
+				</div>
+			</div>
+			<hr/>
+			<div id="footer">
+				<?php require 'view/footer.html'; ?>
+				<div class="clear"><!-- --></div>
+			</div>
+		</div>
+	</body>
+</html>
