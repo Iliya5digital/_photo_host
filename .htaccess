@@ -1,0 +1,12 @@
+RewriteEngine on
+
+RewriteRule ^gallery\/?$ gallery.php [L]
+RewriteRule ^gallery\/(new|popular)\/(today|week|month|all)\/([0-9]+)\/?$ gallery.php?order=$1&range=$2&page=$3 [L]
+
+RewriteRule ^([a-zA-Z]+)\/?$ index.php?i=$1 [L,QSA]
+RewriteRule ^a\/([a-zA-Z]+)\/?$ index.php?a=$1 [L,QSA]
+
+RewriteRule ^(small|medium|square)\/([a-zA-Z]+)\.([a-z]{3,4})$ php/resize.php?m=$1&a=$2&e=$3 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([a-zA-Z]+)\.([a-z]{3,4})$ php/resize.php?m=original&a=$1&e=$2 [L]
